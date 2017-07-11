@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MY APP</title>
+  <link rel="stylesheet" href="intlTelInput.css">
+
+</head>
+<body>
+  <h1>SMS Service</h1>
+
+  <ul class="smsService">
+  <% for(var i=0; i<smsData.length; i++) {%>
+    <li class="sms">
+      <span><%= smsData[i].mobile %></span>
+      <span><%= smsData[i].message %></span>
+    </li>
+  <% } %>
+  </ul>
+
+  <form action="/sms" method="POST">
+    <input id="phone" type="tel" placeholder="Mobile" name="mobile">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="intlTelInput.js"></script>
+    <script>
+       $("#phone").intlTelInput({
+   initialCountry: "auto",
+  geoIpLookup: function(callback) {
+    $.get('http://ipinfo.io', function() {}, "jsonp").always(function(resp) {
+      var countryCode = (resp && resp.country) ? resp.country : "";
+      callback(countryCode);
+    });
+  },
+  utilsScript: "utils.js" // just for formatting/placeholders etc
+});
+    </script>
+    <input id="userSMS" type="text" placeholder="Please write your message" name="message">
+    <button id="sendSMSBtn" type="submit">Send</button>
+  </form>
+
+</body>
+</html>
